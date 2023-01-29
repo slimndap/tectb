@@ -15,6 +15,14 @@ function add_tickets_button_to_single_event() {
 		__NAMESPACE__.'\do_single_event_tickets_button'
 	);
 	
+	add_action( 
+		sprintf( 
+			'tribe_events_%s',
+			$settings[ 'single_event_blocks_location' ]
+		),
+		__NAMESPACE__.'\do_single_event_tickets_button'
+	);
+	
 }
 
 function do_single_event_tickets_button() {
