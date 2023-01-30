@@ -1,0 +1,17 @@
+#tectb-admin-form > table {
+  width: 100%;
+}
+#tectb-admin-form > table th {
+  vertical-align: top;
+  text-align: left;
+}
+#tectb-admin-form > table #tectb-admin-prices-table {
+  display: none;
+}
+#tectb-admin-form > table #tectb-admin-prices-table.has-prices {
+  display: table;
+}
+#tectb-admin-form > table .tectb-admin-actions {
+  margin: 10px 0 20px;
+}
+/*# sourceMappingURL=admin.css.map */

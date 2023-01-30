@@ -30,43 +30,40 @@ function do_single_event_tickets_button() {
 
 	$settings = \TBTEC\get_settings();
 	
-	$tickets_button_url = get_post_meta( get_the_id(), '_tickets_button_url', true );
-
-	if ( empty( $tickets_button_url ) ) {
-		return;
-	}
-	
 	?><div class="tbtec-tickets tribe-common">
 		
-		<h2 class="tribe-common-h4 tribe-common-h--alt">Tickets</h2>
+		<h2 class="tribe-common-h4 tribe-common-h--alt">Tickets</h2><?php
+			
+		$prices = \TBTEC\get_prices( get_the_id() );
 		
-		<div class="tbtec-ticket">
-			<div class="tbtec-ticket-title tribe-common-h7 tribe-common-h6--min-medium">
-				Normaal	
-			</div>
-			<div class="tbtec-ticket-price tribe-common-b2 tribe-common-b3--min-medium">
-				€ 20,00
-			</div>
-		</div>
+		foreach( $prices as $price ) {
+			?><div class="tbtec-ticket">
+				<div class="tbtec-ticket-title tribe-common-h7 tribe-common-h6--min-medium"><?php
+					if ( !empty( $price[ 'name' ] ) ) {
+						echo esc_html( $price[ 'name' ] );
+					}
+				?></div>
+				<div class="tbtec-ticket-price tribe-common-b2 tribe-common-b3--min-medium"><?php
+					if ( isset( $price[ 'amount' ] ) ) {
+						echo esc_html( tribe_format_currency( $price[ 'amount' ] ) );
+					}
+				?></div>
+			</div><?
+		}
+		
+		$tickets_button_url = \TBTEC\get_url( get_the_id() );
+	
+		if ( !empty( $tickets_button_url ) ) {
+			?><div class="tbtec_ticket-button">
+				<a class="tribe-common-c-btn-border" href="<?php
+					echo esc_attr( $tickets_button_url );
+				?>" sstyle="color: var( --tec-color-background ); background-color: var(--tec-color-accent-primary); width: auto;"><?php
+					echo esc_html( $settings[ 'ticket_buttons_label' ] ); 
+				?></a>
+			</div><?php
+		}
 
-		<div class="tbtec-ticket">
-			<div class="tbtec-ticket-title tribe-common-h7 tribe-common-h6--min-medium">
-				Normaal	
-			</div>
-			<div class="tbtec-ticket-price tribe-common-b2 tribe-common-b3--min-medium">
-				€ 20,00
-			</div>
-		</div>
-
-		<div class="tbtec_ticket-button">
-			<a class="tribe-common-c-btn-border" href="<?php
-				echo esc_attr( $tickets_button_url );
-			?>" sstyle="color: var( --tec-color-background ); background-color: var(--tec-color-accent-primary); width: auto;"><?php
-				echo esc_html( $settings[ 'ticket_buttons_label' ] ); 
-			?></a>
-		</div>
-
-	</div><?php
+	?></div><?php
 	
 }
 

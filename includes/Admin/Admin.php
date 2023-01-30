@@ -8,6 +8,7 @@ add_action( 'admin_init', __NAMESPACE__.'\save_settings' );
 
 add_action( 'add_meta_boxes', __NAMESPACE__.'\add_meta_box' );
 add_action( 'save_post', __NAMESPACE__.'\save_meta_box' );
+add_action( 'admin_enqueue_scripts', __NAMESPACE__.'\enqueue_scripts' );
 
 function add_meta_box( $post_type ) {
 
@@ -30,23 +31,71 @@ function do_meta_box_html( $post ) {
 
 	wp_nonce_field( 'TBTEC', 'TBTEC_nonce' );
 
-	$value = get_post_meta( $post->ID, '_tickets_button_url', true );
+	$tickets_button_url = get_post_meta( $post->ID, '_tickets_button_url', true );
+	$tickets_button_prices = get_post_meta( $post->ID, '_tickets_button_price', false );
 
-	?><div class="eventForm inside">
-		<table class="eventtable">
+	?><div id="tectb-admin-form">
+		<table>
 			<tbody>
 				<tr>
-					<td style="width: 172px;">
-						<label for="tickets_button_url"><?php _e( 'Tickets link', 'ticket-buttons-for-the-events-calendar' ); ?>:	</label>
-					</td>
+					<th>
+						<label for="tickets_button_url"><?php _e( 'Prices', 'ticket-buttons-for-the-events-calendar' ); ?>:	</label>
+					</th>
 					<td>
-						<input type="url" id="tickets_button_url" name="tickets_button_url" value="<?php echo esc_attr( $value ); ?>" size="25" style="width: 70%" />
+						<table id="tectb-admin-prices-table" class="widefat">
+							<thead>
+								<tr>
+									<th>Amount</th>
+									<th>Name</th>
+									<th></th>
+								</tr>
+							</thead>							
+							<tbody><?php
+								for( $p = 0; $p < count( $tickets_button_prices ); $p++ ) {
+									
+									$tickets_button_price = $tickets_button_prices[ $p ];
+									
+									if ( empty( $tickets_button_price ) ) {
+										continue;
+									}
+
+									?><tr>
+										<td>
+											<input type="number" name="tickets_button_prices[<?php echo $p; ?>][amount]" value="<?php echo esc_attr( $tickets_button_price[ 'amount' ] ); ?>" />
+										</td>
+										<td>
+											<input type="text" name="tickets_button_prices[<?php echo $p; ?>][name]" value="<?php echo esc_attr( $tickets_button_price[ 'name' ] ); ?>" />
+										</td>
+										<td>
+											<button><span class="dashicons dashicons-trash"></span></button>
+										</td>
+									</tr><?php
+								}
+							?></tbody>
+						</table>
+						<div class="tectb-admin-actions">
+							<button id="tectb-admin-add-price" class="button-secondary tribe-button-icon tribe-button-icon-plus" type="button">New price</button>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label for="tickets_button_url"><?php _e( 'Tickets link', 'ticket-buttons-for-the-events-calendar' ); ?>:	</label>
+					</th>
+					<td>
+						<input type="url" id="tickets_button_url" name="tickets_button_url" value="<?php echo esc_attr( $tickets_button_url ); ?>" size="25" style="width: 70%" />
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div><?php
 		
+}
+
+function enqueue_scripts() {
+	
+	wp_enqueue_style( 'tectb-admin', \TBTEC\PLUGIN_URI.'/assets/css/admin.css', array(), \TBTEC\VERSION );
+	wp_enqueue_script( 'tectb-admin', \TBTEC\PLUGIN_URI.'/assets/js/admin.js', array( 'jquery' ), \TBTEC\VERSION );
 }
 
 function save_meta_box( $post_id ) {
@@ -79,8 +128,30 @@ function save_meta_box( $post_id ) {
 		// Sanitize the user input.
 		$tickets_button_url = sanitize_text_field( $_POST[ 'tickets_button_url' ] );
 
+		if ( empty( $_POST[ 'tickets_button_prices' ] ) ) {
+			$tickets_button_prices = array();
+		} else {
+			$tickets_button_prices = $_POST[ 'tickets_button_prices' ];
+		}
+
 		// Update the meta field.
-		update_post_meta( $post_id, '_tickets_button_url', $tickets_button_url );
+		\TBTEC\update_url($tickets_button_url, $post_id );
+
+		\TBTEC\delete_prices( $post_id );
+
+		if ( empty( $tickets_button_prices ) || !is_array( $tickets_button_prices ) ) {
+			// Do nothing.
+		} else {
+			foreach( $tickets_button_prices as $tickets_button_price ) {
+				\TBTEC\add_price( 
+					$tickets_button_price[ 'amount' ],
+					$tickets_button_price[ 'name' ],
+					$post_id
+				);
+			}
+		}
+		
+		
 }
 
 function add_tec_settings_tab() {

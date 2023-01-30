@@ -1,0 +1,1 @@
+"use strict";(function(){jQuery((function(){if(!(1>jQuery("#tectb-admin-form").length))return alert("kkk")}))}).call(void 0);
