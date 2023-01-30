@@ -48,16 +48,17 @@ function do_single_event_tickets_button() {
 						echo esc_html( tribe_format_currency( $price[ 'amount' ] ) );
 					}
 				?></div>
-			</div><?
+			</div><?php
 		}
 		
 		$tickets_button_url = \TBTEC\get_url( get_the_id() );
-	
+
 		if ( !empty( $tickets_button_url ) ) {
+
 			?><div class="tbtec_ticket-button">
 				<a class="tribe-common-c-btn-border" href="<?php
 					echo esc_attr( $tickets_button_url );
-				?>" sstyle="color: var( --tec-color-background ); background-color: var(--tec-color-accent-primary); width: auto;"><?php
+				?>"><?php
 					echo esc_html( $settings[ 'ticket_buttons_label' ] ); 
 				?></a>
 			</div><?php

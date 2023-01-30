@@ -19,5 +19,11 @@ Now is your chance! Please [let me know in the forum](https://wordpress.org/supp
 
 == Changelog ==
 
+= 1.1 =
+
+* Added support for multiple prices per event.
+* Added support for block themes.
+
 = 1.0 =
-Ticket buttons for The Events Calendar is born!
+
+* Ticket buttons for The Events Calendar is born!
