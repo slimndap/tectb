@@ -19,6 +19,10 @@ Now is your chance! Please [let me know in the forum](https://wordpress.org/supp
 
 == Changelog ==
 
+= 1.2 =
+
+* Added support series.
+
 = 1.1 =
 
 * Added support for multiple prices per event.

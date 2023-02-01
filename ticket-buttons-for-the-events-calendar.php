@@ -5,7 +5,7 @@
  * Description:     Add a tickets button to your events in The Events Calendar to allow ticket sales on external websites. 
  * Author:          Slim & Dapper
  * Author URI:      https://slimndap.com
- * Version:         1.1.1
+ * Version:         1.2
  * Text Domain: 	TBTEC
  *
  * @package         TBTEC
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
 
-define( 'TBTEC\VERSION', '1.1.1' );
+define( 'TBTEC\VERSION', '1.2' );
 define( 'TBTEC\PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'TBTEC\PLUGIN_URI', plugin_dir_url( __FILE__ ) );
 
