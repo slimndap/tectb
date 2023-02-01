@@ -18,6 +18,7 @@ function is_tec_activated() {
 function get_settings() {
 	
 	$defaults = array(
+		'ticket_buttons_heading' => __('Tickets', 'ticket-buttons-for-the-events-calendar' ),
 		'ticket_buttons_label' => __('Get tickets', 'ticket-buttons-for-the-events-calendar' ),
 		'single_event_location' => 'single_event_after_the_meta',
 		'single_event_blocks_location' => 'single_event_meta_secondary_section_end',
@@ -27,6 +28,70 @@ function get_settings() {
 
 	return $settings;
 	
+}
+
+function get_tickets_button_html( $event_id ) {
+	
+	return \TBTEC\Frontend\get_html_for_event( $event_id );
+	
+}
+
+function get_events_for_series( $series_id ) {
+	
+	return tribe_get_events(
+		array(
+			'starts_after' => 'now',
+			'series' => $series_id,
+		)
+	);
+	
+}
+
+function get_tickets_for_series( $series_id ) {
+
+	$series_tickets = array();
+
+	$events = tribe_get_events(
+		array(
+			'starts_after' => 'now',
+			'series' => $series_id,
+		)
+	);
+
+	foreach( $events as $event ) {
+		
+		$event_tickets = get_tickets_for_event( $event->ID );
+		
+		if ( empty( $event_tickets ) ) {
+			continue;
+		}
+		
+		$series_tickets = array_merge( $series_tickets, $event_tickets );
+		
+	}
+
+	return $series_tickets;
+	
+}
+
+function get_tickets_for_event( $event_id ) {
+	
+	$tickets = array();
+
+	$prices = \TBTEC\get_prices( $event_id );
+	$url = \TBTEC\get_url( $event_id );
+	
+	if ( !empty( $prices ) || !empty( $url ) ) {
+		
+		$tickets[] = array(
+			'prices' => $prices,
+			'url' => $url,
+			'startdate' => tribe_get_start_date( $event_id ),
+		);
+		
+	}
+	
+	return $tickets;
 }
 
 function sanitize_button_price( $meta_value, $meta_key, $object_type, $object_subtype ) {

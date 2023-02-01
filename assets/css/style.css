@@ -13,7 +13,10 @@
   color: var(--tec-color-text-primary);
   margin: 0 0 var(--tec-spacer-1);
 }
-.tbtec-tickets .tbtec-ticket {
+.tbtec-tickets .tbtec-ticket-startdate {
+  margin: 0 0 var(--tec-spacer-1);
+}
+.tbtec-tickets .tbtec-ticket-price {
   border-top: 1px solid var(--tec-color-border-secondary);
   padding: 12px 0 16px;
   display: flex;
